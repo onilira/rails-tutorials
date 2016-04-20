@@ -5,6 +5,7 @@ class UsersControllerTest < ActionController::TestCase
   def setup
     @user = users(:exemplar)
     @other_user = users(:moral)
+    @inactive_user = users(:desativado)
   end
 
   test "should redirect index when not logged in" do
@@ -65,6 +66,12 @@ class UsersControllerTest < ActionController::TestCase
                                             password_confirmation: '',
                                             admin: true }
     assert_not @other_user.reload.admin?
+  end
+
+  test "should redirect to root when trying to show inactive user" do
+    log_in_as(@user)
+    get :show, id: @inactive_user
+    assert_redirected_to root_url
   end
 
 end
